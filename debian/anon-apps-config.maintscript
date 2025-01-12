@@ -3,3 +3,5 @@
 
 ## moved to etc/permission-hardener.d
 rm_conffile /etc/permission-hardening.d/30_ping.conf
+## moved to usr/lib/permission-hardener.d
+rm_conffile /etc/permission-hardener.d/30_ping.conf

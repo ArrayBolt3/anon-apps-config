@@ -3,17 +3,23 @@
 ## Copyright (C) 2012 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
-## Enable verbose output.
-set -x
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o errtrace
+shopt -s inherit_errexit
+shopt -s shift_verbose
 
 error_handler() {
+   ## Reached only through the ERR trap below.
+   # shellcheck disable=SC2317
    true "ERROR!"
    exit 1
 }
 
 trap error_handler ERR
 
-if [ "$(id -u)" == "0" ]; then
+if [ "$(id -u)" = "0" ]; then
       true "Do not run as root!"
       exit 112
 fi
@@ -25,7 +31,7 @@ killall xchat || true
 datestring="$(date '+%F-%H:%M:%S')"
 backup_folder=~/xchat_${datestring}
 if [ -d ~/.xchat2 ]; then
-   mv ~/.xchat2 "$backup_folder"
+   mv -- ~/.xchat2 "${backup_folder}"
 fi
 
 ## XChat settings from:
@@ -36,5 +42,5 @@ mkdir --parents ~/.xchat2
 cp -r /etc/skel/.xchat2 ~/
 
 true "INFO: Done."
-true "INFO: A backup can be found: $backup_folder - feel free to delete it."
+true "INFO: A backup can be found: ${backup_folder} - feel free to delete it."
 true "INFO: Be sure to change your Tor circuit before reconnecting to IRC!"
